@@ -19,13 +19,19 @@ for i in users:
     else:
         i.insert(0, fio[0])
         i.insert(1, fio[1])
-all_word_pattern = r"(\+7|8)?\s*\(?(\d{3})\)?[\s*-]?(\d{3})[-\s]?(\d{2})[-\s]?(\d{2})\s*(\(?\w*\.?\s?\w*\)?)"
-replacement_pattern = r"+7(\2)\3-\4-\5 \6"
+all_word_pattern = r"(\+7|8)?\s*\(?(\d{3})\)?[\s*-]?(\d{3})[-\s]?(\d{2})[-\s]?(\d{2})\s*(\(?\w*\.?)(\s?\w*\)?)"
+replacement_pattern = r"+7(\2)\3-\4-\5 \6\7"
+replacement_pattern2 = r"+7(\2)\3-\4-\5\6"
 for i in users:
     users_clear = ''
     cleaned_phones = []
+
     for j in i:
-        cleaned_phones.append(re.sub(all_word_pattern, replacement_pattern, j))
+        j = re.sub(r"доб\.\s+", "доб.", j)
+        if 'доб' in j:
+            cleaned_phones.append(re.sub(all_word_pattern, replacement_pattern, j.strip()))
+        else:
+            cleaned_phones.append(re.sub(all_word_pattern, replacement_pattern2, j.strip()))
     result_user.append(cleaned_phones)
 pprint(result_user)
 group = {}
